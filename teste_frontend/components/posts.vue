@@ -1,26 +1,47 @@
 <template>
-    <div>
+    <div class="all">
 <h1 >Posts</h1>
 <!-- Adicionando produto -->
 <input type="text"
 v-model="titulo"
 placeholder="título"
 class="titulo-input" >
-
-<input type="text"
+   
+<p>
+ <input type="text"
+    v-model="preco"
+    placeholder="Preço"
+    class="preco-input" >
+</p>
+<p>
+    <input type="text"
     v-model="descri"
     placeholder="descrição"
     class="decricao-input" >
-
+</p>
+<p><input type="text"
+    v-model="categoria"
+    placeholder="catégoria"
+    class="categoria-input" ></p>
+    <p>
+        <input type="text"
+    v-model="quantidade"
+    placeholder="Quantidade"
+    class="quantidade-input" >
+    </p>
 <!-- botão de renderização IF -->
 <button v-if="Editar" @click="updatePost">Update</button>
 <button v-if="Editar" @click="cancelEdit">Cancelar</button>
 
 <button v-else @click="createPost">Criar</button>
 
-<div v-for="post in posts" :key="post.id">
-    <h5>[{{ post.id }}]{{ post.titulo }}</h5>
-    <p>{{post.descri}}</p>
+<div class="div-for" v-for="post in posts" :key="post.id">
+    <h5>[ {{ post.id }} ] Título:{{ post.titulo }}</h5>
+    <p>Preço: {{ post.preco }}</p>
+
+    <p>Descrição: {{post.descri}}</p>
+    <p>Catégoria: ${{ post.preco }} conto</p>
+    <p>Quantidade: {{ post.quantidade }}</p>
     <button @click="editPost(post.id)">Editar</button>
     <button @click="deletePost(post.id)">Deletar</button>
 
@@ -32,8 +53,12 @@ class="titulo-input" >
 
 
 const posts = ref([]);
-const titulo = ref('')
+const titulo = ref('');
 const descri = ref('');
+const preco = ref('');
+const categoria = ref('');
+const quantidade = ref('');
+
 const postId = ref(0);
 const Editar = ref(false)
 const api_URL = 'http://127.0.0.1:3000/produtos'
@@ -50,6 +75,9 @@ const createPost = async ()=>{
         },
         body: JSON.stringify({
             titulo: titulo.value,
+            preco: preco.value,
+            categoria: categoria.value,
+            quantidade:quantidade.value,
             descri: descri.value
         })
     })
@@ -58,6 +86,9 @@ const createPost = async ()=>{
 
     posts.value.push(data)
     titulo.value = ''
+    preco.value = ''
+    categoria.value = ''
+    quantidade.value=''
     descri.value = ''
     postId.value = 0;
 }
@@ -69,6 +100,9 @@ const updatePost = async () => {
         },
         body: JSON.stringify({
             titulo: titulo.value,
+            preco: preco.value,
+            categoria: categoria.value,
+            quantidade: quantidade.value,
             descri: descri.value,
             id: postId.value
         })
@@ -80,6 +114,9 @@ const updatePost = async () => {
     posts.value[index] = data
 
     titulo.value = ''
+    preco.value = ''
+    categoria.value = ''
+    quantidade.value = ''
     descri.value = ''
     postId.value = 0;
     Editar.value = false
@@ -88,6 +125,9 @@ const updatePost = async () => {
 }
 const cancelEdit = () => {
     titulo.value = ''
+    preco.value = ''
+    categoria.value = ''
+    quantidade.value = ''
     descri.value = ''
     postId.value = 0;
     Editar.value = false
@@ -104,6 +144,9 @@ const deletePost = async (id) => {
 const editPost = async (id) => {
     const post = posts.value.find(post => post.id === id)
     titulo.value = post.titulo
+    preco.value = post.preco
+    categoria.value = post.categoria
+    quantidade.value = post.quantidade
     descri.value = post.descri
     postId.value = post.id
     Editar.value = true
@@ -116,5 +159,12 @@ const editPost = async (id) => {
 </script>
 
 <style  scoped>
-
+.all{
+    text-align: center;
+}
+.div-for{
+    border-style: solid ;
+    border-width: 2px;
+    width: 250px;
+}
 </style>
